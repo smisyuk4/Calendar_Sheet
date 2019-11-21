@@ -1,0 +1,142 @@
+function onOpen() {    
+  var ui = SpreadsheetApp.getUi();   
+  ui.createMenu("Меню тренера")
+  .addItem("Копирование данных из Google Calendar", "upGradeData")
+  .addToUi();  
+}
+
+function upGradeData() {
+  //подключение к таблице "firstDay"
+  var sheet = SpreadsheetApp.openById("1RuVJoEfM9vBaS6YlxUjRXm02GF7zyH0JVpvHZdGq3c8");
+  
+  //подключение к нужной странице
+  var list = sheet.getSheetByName("Тест_календарь");   
+  
+   //поиск загруженного диапазона в таблицу  
+  var firstRowRange = list.getLastRow();
+  pullEvents();
+  var lastRowRange = list.getLastRow();
+  var countRow = lastRowRange - firstRowRange;   
+ 
+   //изменение отображения даты, удаление "EET"
+  for (var i=0; i<countRow; i++){    
+    var getDateCell = list.getRange(firstRowRange+1+i, 1).getValue();   
+    var arrayDate = getDateCell.split(" ");   
+    var newArrayDate = arrayDate[0] + " " + arrayDate[1]+ " " + arrayDate[2]+ " " + arrayDate[3]+ " " + arrayDate[4];   
+    list.getRange(firstRowRange+1+i, 1).setValue(newArrayDate);    
+  }   
+ 
+  //поиск ключевых слов в диапазоне ячеек ввод суммы совпадений в соответствующие ячейки
+  var textGroup = "группа";
+  var textBpt = "бпт";
+  var textBptPositive = "бпт+";
+  var textNotVisit0 = "пришёл";
+  var textNotVisit1 = "пришел";
+  var textNotVisit2 = "пришла";
+  var textDocument = "справка";       
+  
+  var search = list.getRange(firstRowRange+1, 2, countRow, 4).createTextFinder(textGroup).findAll();
+  var searchResult = search.length;
+  list.getRange(firstRowRange+1, 7).setValue(searchResult).setBackground("#ceebd0");  
+  
+  var search2 = list.getRange(firstRowRange+1, 2, countRow, 4).createTextFinder(textBpt).findAll();
+  var searchResult2 = search2.length;
+  list.getRange(firstRowRange+1, 8).setValue(searchResult2).setBackground("#ceebd0");  
+  
+  var search3 = list.getRange(firstRowRange+1, 2, countRow, 4).createTextFinder(textBptPositive).findAll();
+  var searchResult3 = search3.length;
+  list.getRange(firstRowRange+1, 9).setValue(searchResult3).setBackground("#ceebd0");  
+  
+  var search40 = list.getRange(firstRowRange+1, 2, countRow, 4).createTextFinder(textNotVisit0).findAll();
+  var search41 = list.getRange(firstRowRange+1, 2, countRow, 4).createTextFinder(textNotVisit1).findAll();
+  var search42 = list.getRange(firstRowRange+1, 2, countRow, 4).createTextFinder(textNotVisit2).findAll();  
+  var searchResult4 = search40.length + search41.length + search42.length;
+  list.getRange(firstRowRange+1, 10).setValue(searchResult4).setBackground("#ceebd0");  
+  
+  var search5 = list.getRange(firstRowRange+1, 2, countRow, 4).createTextFinder(textDocument).findAll();
+  var searchResult5 = search5.length;
+  list.getRange(firstRowRange+1, 11).setValue(searchResult5).setBackground("#ceebd0"); 
+
+  //подсчет тренировок персональных клиентов    
+  var countColumn = 4;  
+  var notEmptyCell=0;   
+  var startRow = firstRowRange+1;
+  var startCol = 2;
+  
+  for (var i=0; i<countRow; i++){
+    for (var j=0; j<countColumn; j++){
+      if (list.getRange(startRow+i, startCol+j).getValue() !== ""){
+        notEmptyCell++;
+      }      
+    }
+  }   
+  
+  var searchResult6 = notEmptyCell - searchResult - searchResult2 - searchResult5;
+  list.getRange(firstRowRange+1, 6).setValue(searchResult6).setBackground("#ceebd0");  
+}
+
+function pullEvents() {
+  //подключение к "Тест - google calendar"
+  //var calendar = CalendarApp.getCalendarById("7bjlkermbm352732svucp4v970@group.calendar.google.com");   
+  var calendar = CalendarApp.getCalendarById("smisyuk@gmail.com");
+  
+  //подключение к таблице "firstDay"
+  var sheet = SpreadsheetApp.openById("1RuVJoEfM9vBaS6YlxUjRXm02GF7zyH0JVpvHZdGq3c8");
+  
+  //подключение к нужной странице
+  var list = sheet.getSheetByName("Тест_календарь");  
+  
+  //поиск диапазона для загрузки данных
+  var startDate = list.getRange(1, 2).getValue();        
+  var finishDate = list.getRange(1, 3).getValue();  
+  
+  //выборка массива событий из календаря  
+  var events = calendar.getEvents(startDate, finishDate);   
+  
+ 
+    //поиск последней строки в таблице
+    var lastRow = list.getLastRow();      
+            
+    //загрузка данных из календаря в таблицу
+    list.getRange(lastRow+1, 1).setValue(events[0].getStartTime().toLocaleString("ru"));
+    var oldTime = list.getRange(lastRow+1, 1).getValue();  
+    
+    var startRow = lastRow+1;  
+    var startColumn = 2;
+    var j=lastRow+2;  
+    
+    for (var i=0; i<events.length; i++){      
+      var newTime = events[i].getStartTime().toLocaleString("ru");
+      var man = events[i].getTitle();       
+      
+      if (newTime == oldTime){
+        //вправо        
+        list.getRange(startRow, startColumn).setValue(man);
+        startColumn++;
+      }
+      else{
+        //вниз            
+        list.getRange(j, 1).setValue(newTime) 
+        list.getRange(j, 2).setValue(man)                
+        j++;
+        startRow++;
+        startColumn = 3;
+        oldTime = newTime;
+      } 
+    }    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
