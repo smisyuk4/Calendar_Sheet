@@ -80,8 +80,7 @@ try{
   list.getRange(firstRowRange+1, 6).setValue(searchResult6).setBackground("#ceebd0");  
   
   } //конец try
-  catch(e){
-    Logger.log("сплошные ошибки!!!!!!");
+  catch(e){   
   }
   
 }
@@ -96,21 +95,23 @@ function pullEvents() {
   //подключение к нужной странице
   var list = sheet.getSheetByName("Тест_календарь");  
   
-  //поиск диапазона для загрузки данных
-  var startDate = list.getRange(1, 2).getValue();        
-  var finishDate = list.getRange(1, 3).getValue();  
-  var oneDay = list.getRange(1, 5).getValue();    
   
-  //отлавливание ошибки в пустом календарном дне
-  try{
-    
-  //выборка массива событий из календаря   
-  if ((startDate !== "") && (finishDate !== "")){
-    var events = calendar.getEvents(startDate, finishDate); 
+  //проверка в каком режиме выполнять загрузку событий из календаря
+  var modeLoadingEvents = list.getRange(1, 2).isChecked(); 
+  
+  if (modeLoadingEvents == true){
+    var oneDay = new Date();
+    Logger.log("automatic MODE");    
   }
-  else if (oneDay !== ""){
-    var events = calendar.getEventsForDay(oneDay);
-  }     
+  else{
+    //поиск даты для загрузки данных   
+    var oneDay = list.getRange(1, 5).getValue();   
+    Logger.log("manual MODE");
+  }  
+  
+  //отлавливание ошибок из-за отсутствия событий в календарном дне
+try{   
+  var events = calendar.getEventsForDay(oneDay);       
   
   //поиск последней строки в таблице
   var lastRow = list.getLastRow();          
@@ -122,15 +123,8 @@ function pullEvents() {
   var fullYear = oneDay.getFullYear(); 
   
   /*
-  0 - Воскресенье
-  1 - Понедельник
-  ...
-  6 - Суббота  
-  
-  0 - Январь
-  1 - Февраль
-  ...
-  11 - Декабрь
+  0 - Воскресенье, 1 - Понедельник, ..., 6 - Суббота    
+  0 - Январь, 1 - Февраль, ..., 11 - Декабрь
   */
   
   //ДОРАБОТАТЬ - если не было событий за день, то создать пустую строку и добавить цвет
@@ -181,11 +175,10 @@ function pullEvents() {
         startColumn = 3;
         oldTime = newTime;
       } 
-    }    
-    
+    }        
     
      } //конец try
-  catch (e){
+catch (e){
     Logger.log("В календаре нет событий для загрузки");
     return;
   }
