@@ -195,7 +195,7 @@ function checkDataFromAdmSheet (list, searchResult6, firstRowRange){
     var rowCountTraining = admList.getLastRow();
     var admCountTraining = admList.getRange(rowCountTraining, currentColDate).getValue();   
       
-    if(searchResult6 !== admCountTraining){      
+    if(searchResult6 != admCountTraining){      
        list.getRange(firstRowRange+1, 6).setBackground("#ff8c8c");      
     }        
   }
