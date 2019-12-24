@@ -15,7 +15,7 @@ function transferDataToAnaliticList(sheet, list, bottomPoint, analiticList) {
   var lastRowAnaliticList = analiticList.getLastRow();  
   analiticList.getRange(lastRowAnaliticList+1, 1).setValue(newArrayDate);  
   
-  for (var i=0; i<5; i++){
+  for (var i=0; i<6; i++){
   //поиск ячейки в list и её названия, сделать формулу
   var countClients = list.getRange(bottomPoint, 6+i).getA1Notation();  
   var formulaTransfer = "='Данные из календаря'!" + countClients; //='Данные из календаря'!F137   
