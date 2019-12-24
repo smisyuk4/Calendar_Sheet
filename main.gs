@@ -54,8 +54,8 @@ try{
           ((fullYear % 100 + 2) % (fullYear % 100 + 1)) + (1 - (fullYear % 400 + 2) % (fullYear % 400 + 1)))/numMonth);    
     
   if (todayDate == lastDayMonth){
-    list.getRange(lastRow+2, 6, 1, 6).setBackground("#ffff00");  
-    list.getRange(lastRow+2, 12).setValue("<----- Значения за месяц");
+    list.getRange(lastRow+2, 6, 1, 7).setBackground("#ffff00");  
+    list.getRange(lastRow+2, 13).setValue("<----- Значения за месяц");
   }     
               
     //загрузка данных из календаря в таблицу
