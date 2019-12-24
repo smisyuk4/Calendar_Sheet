@@ -19,7 +19,7 @@ function sumData() {
       }while(list.getRange(topPoint, 6).getBackground() !== "#ffff00")
       
   //формирование имени ячеек диапазона, формулы и дальнейшая запись в ячейку
-      for (var i=0; i<6; i++){
+      for (var i=0; i<7; i++){
         var sumRangeTop = list.getRange(topPoint + 1, 6+i).getA1Notation();
         var sumRangeBottom = list.getRange(bottomPoint - 1, 6+i).getA1Notation();  
   
