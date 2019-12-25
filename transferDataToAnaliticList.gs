@@ -5,7 +5,7 @@ function transferDataToAnaliticList(sheet, list, bottomPoint, analiticList) {
   do{
     i++;
     date = list.getRange(bottomPoint-i, 1).getValue(); //если она пустая, то взять выше на одну строку
-  }while(date == "" || date == "undefined")
+  }while(date == '')
     
   Logger.log(date);
   var arrayDate = date.split(" ");   
