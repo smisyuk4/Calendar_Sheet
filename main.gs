@@ -99,10 +99,13 @@ catch (e){
  function upGradeData(oneDay, list, countRow, firstRowRange){
    //изменение отображения даты, удаление "EET"
   for (var i=0; i<countRow; i++){    
-    var getDateCell = list.getRange(firstRowRange+1+i, 1).getValue();   
-    var arrayDate = getDateCell.split(" ");   
-    var newArrayDate = arrayDate[0] + " " + arrayDate[1]+ " " + arrayDate[2]+ " " + arrayDate[3]+ " " + arrayDate[4];   
-    list.getRange(firstRowRange+1+i, 1).setValue(newArrayDate);    
+    //проверка заполненности ячейки
+    var getDateCell = list.getRange(firstRowRange+1+i, 1).getValue();
+    if(getDateCell != ''){         
+      var arrayDate = getDateCell.split(" ");   
+      var newArrayDate = arrayDate[0] + " " + arrayDate[1]+ " " + arrayDate[2]+ " " + arrayDate[3]+ " " + arrayDate[4];   
+      list.getRange(firstRowRange+1+i, 1).setValue(newArrayDate);   
+    }    
   }   
  
   //поиск ключевых слов в диапазоне ячеек ввод суммы совпадений в соответствующие ячейки
