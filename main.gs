@@ -157,7 +157,7 @@ try{
     }
   }   
   
-  var searchResult6 = notEmptyCell - searchResult - searchResult2 - searchResult5 - searchResult7;
+  var searchResult6 = notEmptyCell - searchResult - searchResult2 - searchResult5;
   list.getRange(firstRowRange+1, 6).setValue(searchResult6);    
     
   //изменение цвета строки с значениями за день
