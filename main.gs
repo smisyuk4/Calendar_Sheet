@@ -1,10 +1,10 @@
 function main() {
   //подключение к таблице "Работа"
-  var sheet = SpreadsheetApp.openById(" ");  
+  var sheet = SpreadsheetApp.openById("");  
   //подключение к нужной странице
   var list = sheet.getSheetByName("Данные из календаря");     
-  //подключение к "CF Trainer - google calendar"     
-  var calendar = CalendarApp.getCalendarById(" ");    
+  //подключение к "Мисюк - google calendar"     
+  var calendar = CalendarApp.getCalendarById("");    
   
   //поиск загруженного диапазона в таблицу  
   var firstRowRange = list.getLastRow();   
@@ -105,7 +105,7 @@ catch (e){
       var arrayDate = getDateCell.split(" ");   
       var newArrayDate = arrayDate[0] + " " + arrayDate[1]+ " " + arrayDate[2]+ " " + arrayDate[3]+ " " + arrayDate[4];   
       list.getRange(firstRowRange+1+i, 1).setValue(newArrayDate);   
-    }    
+    }
   }   
  
   //поиск ключевых слов в диапазоне ячеек ввод суммы совпадений в соответствующие ячейки
@@ -176,7 +176,13 @@ try{
 }
   
 
-function checkDataFromAdmSheet (oneDay, list, searchResult6, firstRowRange){     
+function checkDataFromAdmSheet (oneDay, list, searchResult6, firstRowRange){ 
+   //var sheet = SpreadsheetApp.openById("");
+   //var list = sheet.getSheetByName("Данные из календаря");
+   //var searchResult6 = 11;
+   //var firstRowRange = 219;
+   //var oneDay = new Date(); 
+  
   //поиск ID для загрузки данных    
   var admID = list.getRange(1, 7).getValue();   
   
@@ -204,12 +210,25 @@ function checkDataFromAdmSheet (oneDay, list, searchResult6, firstRowRange){
     
    //для сверки данных - вывод в ячейки моей таблицы
     list.getRange(firstRowRange+2, 6).setValue(admCountTraining + " админские тренировки");
-    list.getRange(firstRowRange+2, 8).setValue(admDate + " число у админа");  
+    //list.getRange(firstRowRange+2, 8).setValue(admDate + " число у админа");  
           
     if(searchResult6 != admCountTraining){  
      // Logger.log('у меня ' + searchResult6 + ', а у админа ' + admCountTraining + '. ЕРРОР!!!');
      // Logger.log('на ' + admDate + ' число у админа');
-      list.getRange(firstRowRange+1, 6).setBackground("#ff8c8c");        
+      list.getRange(firstRowRange+1, 6).setBackground("#ff8c8c"); 
+
+      
+  //отправка СМС в TELEGRAM
+  var idChatWBot = '';
+  var dateSMS = Utilities.formatDate(new Date(), 'GMT', 'dd.MM.yyyy');
+  //Logger.log(date);
+  var dotID = ''; //AdminRobot  
+  
+  var text = encodeURIComponent(dateSMS + ' Обнаружено не соответствие между записями в Google Calendar тренера и Админской таблицей');
+  var createLink = "https://api.telegram.org/bot" + dotID + "/sendMessage?chat_id=" + idChatWBot + "&text=" + text;  
+  //Logger.log(createLink);
+  var loadLink = UrlFetchApp.fetch(createLink);
+  
     }        
   }
   else{
